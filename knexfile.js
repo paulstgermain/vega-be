@@ -6,6 +6,7 @@ module.exports = {
   development: {
     client: 'pg',
     connection: pgConnection,
+    ssl: { rejectUnauthorized: false },
     migrations: {
       directory: './src/db/migrations',
     },

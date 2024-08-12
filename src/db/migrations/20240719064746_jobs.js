@@ -7,7 +7,7 @@ exports.up = function(knex) {
     table.string('location').notNullable();
     table.string('url').notNullable();
     table.text('description').notNullable();
-    table.integer('status').notNullable();
+    table.string('status').notNullable();
     table.timestamps(true, true);
   });
 };

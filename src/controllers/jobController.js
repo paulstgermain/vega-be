@@ -1,13 +1,32 @@
 const jobModel = require('../models/jobsModel');
 
+// Edit getAllJobs to return all jobs from the database, sorted by their 'status value
+// Example return object: { interested: [job1, job2], applied: [job3, job4], interviewing: [job5], hired: [job6], ghosted: [job7] }
+// If there are no jobs in a certain status, the array should be empty
+// If there are no jobs at all, the return object should be an empty object
+
 const getAllJobs = async (req, res) => {
   try {
     const jobs = await jobModel.getJobs();
-    res.json(jobs);
+    const sortedJobs = jobs.reduce((acc, job) => {
+      acc[job.status] = acc[job.status] || [];
+      acc[job.status].push(job);
+      return acc;
+    }, {});
+    res.json(sortedJobs);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-};
+}
+
+// const getAllJobs = async (req, res) => {
+//   try {
+//     const jobs = await jobModel.getJobs();
+//     res.json(jobs);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
 const getJob = async (req, res) => {
   try {

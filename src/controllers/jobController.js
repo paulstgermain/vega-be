@@ -19,14 +19,19 @@ const getAllJobs = async (req, res) => {
   }
 }
 
-// const getAllJobs = async (req, res) => {
-//   try {
-//     const jobs = await jobModel.getJobs();
-//     res.json(jobs);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
+const getJobByAuthId = async (req, res) => {
+  try {
+    const jobs = await jobModel.getJobByAuthId(req.params.auth_id);
+    const sortedJobs = jobs.reduce((acc, job) => {
+      acc[job.status] = acc[job.status] || [];
+      acc[job.status].push(job);
+      return acc;
+    }, {});
+    res.json(sortedJobs);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
 const getJob = async (req, res) => {
   try {
@@ -79,6 +84,7 @@ const deleteJob = async (req, res) => {
 module.exports = {
   getAllJobs,
   getJob,
+  getJobByAuthId,
   createJob,
   updateJob,
   deleteJob,

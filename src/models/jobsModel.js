@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const { get } = require('../routes/jobRoutes');
 
 const getJobs = () => {
   return db('jobs').select('*');
@@ -6,6 +7,10 @@ const getJobs = () => {
 
 const getJobById = (id) => {
   return db('jobs').where({ id }).first();
+};
+
+const getJobByAuthId = (auth_id) => {
+  return db('jobs').where({ auth_id });
 };
 
 const createJob = (job) => {
@@ -23,6 +28,7 @@ const deleteJob = (id) => {
 module.exports = {
   getJobs,
   getJobById,
+  getJobByAuthId,
   createJob,
   updateJob,
   deleteJob,

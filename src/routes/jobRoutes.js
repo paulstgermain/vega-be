@@ -10,5 +10,6 @@ router.get('/jobs/auth/:auth_id', jobController.getJobByAuthId);
 router.post('/jobs', checkJwt, jobController.createJob);
 router.put('/jobs/:id', checkJwt, jobController.updateJob);
 router.delete('/jobs/:id', checkJwt, jobController.deleteJob);
+router.post('/jobs/resume', jobController.gptTailorResume);
 
 module.exports = router;

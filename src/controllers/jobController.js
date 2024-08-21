@@ -1,9 +1,8 @@
 const jobModel = require('../models/jobsModel');
+const OpenAi = require('openai');
+const { response } = require('express');
 
-// Edit getAllJobs to return all jobs from the database, sorted by their 'status value
-// Example return object: { interested: [job1, job2], applied: [job3, job4], interviewing: [job5], hired: [job6], ghosted: [job7] }
-// If there are no jobs in a certain status, the array should be empty
-// If there are no jobs at all, the return object should be an empty object
+const openai = new OpenAi(process.env.OPENAI_API_KEY);
 
 const getAllJobs = async (req, res) => {
   try {
@@ -81,6 +80,32 @@ const deleteJob = async (req, res) => {
   }
 };
 
+const gptTailorResume = async (req, res) => {
+
+  try {
+    const z = await import ('zod');
+    const { zodResponseFormat } = await import ('openai/helpers/zod.mjs');
+    const GenerateJobKeywords = z.object({
+      keySkills: z.array(z.string()),
+      keyPhrases: z.array(z.string()),
+      keyTips: z.array(z.string()),
+    })
+  
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: 'You are a career coach who specializes in helping people tailor their resumes for specific job postings in the tech industry. You will be given a job description and title, and you will need to generate key skills, key phrases, and key tips for tailoring a resume for that job. You should only return this result in the given format.'},
+        { role: 'user', content: `Job Title: ${req.body.job_title}\nJob Description: ${req.body.job_description}`},
+      ],
+      response_format: zodResponseFormat(GenerateJobKeywords, "generate_job_keywords"),
+    })
+
+    res.json(completion);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
   getAllJobs,
   getJob,
@@ -88,4 +113,5 @@ module.exports = {
   createJob,
   updateJob,
   deleteJob,
+  gptTailorResume,
 };

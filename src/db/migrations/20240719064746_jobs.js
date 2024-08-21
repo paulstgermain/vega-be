@@ -6,7 +6,7 @@ exports.up = function(knex) {
     table.string('salary').notNullable();
     table.string('company_name').notNullable();
     table.string('location').notNullable();
-    table.string('url').notNullable();
+    table.text('url').notNullable();
     table.text('description').notNullable();
     table.string('status').notNullable();
     table.timestamps(true, true);

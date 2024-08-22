@@ -22,16 +22,27 @@ const getAllJobs = async (req, res) => {
 const getJobByAuthId = async (req, res) => {
   try {
     const jobs = await jobModel.getJobByAuthId(req.params.auth_id);
+
+    const initialStatus = {
+      'discovered': [],
+      'applied': [],
+      'reached out': [],
+      'interviewing': [],
+      'offer received': [],
+      'hired': [],
+      'ghosted': []
+    };
+
     const sortedJobs = jobs.reduce((acc, job) => {
-      acc[job.status] = acc[job.status] || [];
       acc[job.status].push(job);
       return acc;
-    }, {});
+    }, initialStatus);
+
     res.json(sortedJobs);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
 const getJob = async (req, res) => {
   try {

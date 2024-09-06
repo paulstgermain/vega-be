@@ -30,6 +30,7 @@ const getJobByAuthId = async (req, res) => {
       'interviewing': [],
       'offer received': [],
       'hired': [],
+      'rejected': [],
       'ghosted': []
     };
 
